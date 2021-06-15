@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   elasticsearch:
-    container_name: oriole-elasticsearch
+    container_name: sample-elasticsearch
     image: elasticsearch:7.13.1
     volumes:
       - type: bind
@@ -28,7 +28,7 @@ services:
     restart: always
 
   kibana:
-    container_name: oriole-kibana
+    container_name: sample-kibana
     image: kibana:7.13.1
     volumes:
       - type: bind
@@ -44,7 +44,7 @@ services:
       - elasticsearch
 
   logstash:
-    container_name: oriole-logstash
+    container_name: sample-logstash
     image: logstash:7.13.1
     volumes:
       - type: bind
@@ -67,10 +67,10 @@ services:
     restart: always
     depends_on:
       - elasticsearch 
-      - oriole-redis
+      - redis
 
-  oriole-redis:
-    container_name: oriole-redis
+  redis:
+    container_name: sample-redis
     image: redis:5.0.12-alpine3.13
     environment:
       - REQUIREPASS=QhwCu6LagegNprWTPTQHcpEKR
