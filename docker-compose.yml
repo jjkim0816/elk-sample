@@ -1,0 +1,88 @@
+version: '3.2'
+
+services:
+  elasticsearch:
+    container_name: oriole-elasticsearch
+    image: elasticsearch:7.13.1
+    volumes:
+      - type: bind
+        source: "${PWD}/elk/elasticsearch/config/elasticsearch.yml"
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+        #- "${PWD}/elk/elasticsearch/data:/usr/share/elasticsearch/data:rw"
+    ports:
+      - "9200:9200"
+      #- "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx2048m -Xms2048m"
+      # ELASTIC_PASSWORD: xinapse0208!
+      ## Use single node discovery in order to disable production mode and avoid bootstrap checks
+      ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    #ulimits:
+    #  memlock:
+    #    soft: -1
+    #    hard: -1
+    networks:
+      - relk
+    restart: always
+
+  kibana:
+    container_name: oriole-kibana
+    image: kibana:7.13.1
+    volumes:
+      - type: bind
+        source: "${PWD}/elk/kibana/config/kibana.yml"
+        target: /usr/share/kibana/config/kibana.yml
+        read_only: true
+    ports:
+      - "5601:5601"
+    networks:
+      - relk
+    restart: always
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    container_name: oriole-logstash
+    image: logstash:7.13.1
+    volumes:
+      - type: bind
+        source: "${PWD}/elk/logstash/config/logstash.yml"
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: "${PWD}/elk/logstash/pipeline"
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "5001:5001/tcp"
+      # - "5001:5001/udp"
+      # - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+
+    networks:
+      - relk
+    restart: always
+    depends_on:
+      - elasticsearch 
+      - oriole-redis
+
+  oriole-redis:
+    container_name: oriole-redis
+    image: redis:5.0.12-alpine3.13
+    environment:
+      - REQUIREPASS=QhwCu6LagegNprWTPTQHcpEKR
+      - ENV=DEV
+    command:
+      --requirepass QhwCu6LagegNprWTPTQHcpEKR
+    networks:
+      - relk
+    restart: always
+    ports:
+      - "32554:6379"
+
+networks:
+  relk:
+    driver: bridge

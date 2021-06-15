@@ -1,0 +1,17 @@
+## Default Logstash configuration from Logstash base image.
+## https://github.com/elastic/logstash/blob/master/docker/data/logstash/config/logstash-full.yml
+#
+node.name: "oriole-logstash"
+#http.host: "0.0.0.0"
+log.format: "json"
+# log.level: "debug"
+config.reload.automatic: true
+
+# 유료 라이센스
+# xpack.monitoring.elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+
+## X-Pack security credentials
+#
+# xpack.monitoring.enabled: true
+# xpack.monitoring.elasticsearch.username: elastic
+# xpack.monitoring.elasticsearch.password: changeme

@@ -1,4 +1,8 @@
-# elk-sample
+# Redis - ELK #
 
-## - docker image를 이용하여 logstash, elasticsearch, kibana 구성
-## - redis queue를 이용하여 log data 
+### build ###
+* $ docker-compose up
+
+### Detail ###
+* 2021-06-15 first commit
+* log queue는 redis를 이용
