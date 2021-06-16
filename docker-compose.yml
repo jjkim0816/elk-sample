@@ -14,7 +14,7 @@ services:
       - "9200:9200"
       #- "9300:9300"
     environment:
-      ES_JAVA_OPTS: "-Xmx2048m -Xms2048m"
+      ES_JAVA_OPTS: "-Xmx4096m -Xms4096m"
       ## Use single node discovery in order to disable production mode and avoid bootstrap checks
       ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
